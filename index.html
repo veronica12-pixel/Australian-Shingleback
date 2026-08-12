@@ -101,6 +101,46 @@
       min-width: 0;
     }
 
+    header .sync-status-btn {
+      margin-left: auto;
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+    }
+    header .sync-status-btn svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.5s ease;
+    }
+    header .sync-status-btn.spinning svg {
+      animation: syncSpin 0.6s linear;
+    }
+    header .sync-status-btn .sync-dot {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #9aa0ac;
+      border: 2px solid var(--bg);
+    }
+    header .sync-status-btn.connecting .sync-dot { background: #eab308; }
+    header .sync-status-btn.online .sync-dot { background: #2f9e44; }
+    header .sync-status-btn.offline .sync-dot { background: #9aa0ac; }
+    @keyframes syncSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     header h1 {
       font-size: 1.45rem;
       font-weight: 700;
@@ -1031,6 +1071,46 @@
       white-space: nowrap;
     }
 
+    .time-h-handle {
+      position: absolute;
+      top: 50%;
+      width: 30px;
+      height: 30px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: var(--card);
+      border: 3px solid var(--accent);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+      cursor: ew-resize;
+      z-index: 6;
+    }
+    .time-h-handle::before {
+      content: '';
+      width: 3px;
+      height: 12px;
+      background: currentColor;
+      border-radius: 2px;
+      opacity: 0.55;
+    }
+    .time-h-handle-start { left: 0; }
+    .time-h-handle-end { left: 100%; }
+    .time-h-mag-handle { left: 100%; }
+    .time-h-handle.dragging {
+      transform: translate(-50%, -50%) scale(1.2);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .time-h-row.row-dragging {
+      background: var(--card-alt);
+    }
+    .time-h-row.row-dragging .time-h-bar-label,
+    .time-h-row.row-dragging .time-h-bar-mag-label {
+      color: var(--accent);
+    }
+
 
     .summary-actions {
       display: inline-flex;
@@ -1312,6 +1392,10 @@
     <div class="header-text">
       <h1>Australian Shingleback<br>Brumation Program</h1>
     </div>
+    <button type="button" class="sync-status-btn offline" id="syncStatus" title="Cloud sync: Offline — tap to sync now">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 11A8 8 0 105.6 15.5M4 4v5h5M4 13a8 8 0 0014.4 4.5M20 20v-5h-5" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <span class="sync-dot"></span>
+    </button>
   </header>
 
   <div class="today-card" id="todayCard">
@@ -1367,9 +1451,9 @@
   </details>
 
   <details class="panel-drop taskbar-panel" id="easyChartPanel">
-    <summary>🦎 Easy Chart (simple)</summary>
+    <summary>📊 Easy Chart (simple)</summary>
     <div class="panel-body">
-      <div class="panel-window-title"><span class="pwt-icon">🦎</span><span class="pwt-text">Charts</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
+      <div class="panel-window-title"><span class="pwt-icon">📊</span><span class="pwt-text">Charts</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div class="kid-chart" id="kidChart"></div>
       <p class="media-hint" style="margin-top:8px;">Warmth, UV hours, and basking hours across the year.</p>
       <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
@@ -1381,7 +1465,7 @@
     <div class="panel-body">
       <div class="panel-window-title"><span class="pwt-icon">☀️</span><span class="pwt-text">UV Lights — Time of Day</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="uvTimeChart"></div>
-      <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the lights are on. The scale is trimmed to the active hours — dark, inactive hours are cut out. Months that are off are labeled OFF.</p>
+      <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the lights are on. Drag the dots at each end of a bar to change that month's start and end time. Months that are off are labeled OFF.</p>
       <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
     </div>
   </details>
@@ -1391,7 +1475,7 @@
     <div class="panel-body">
       <div class="panel-window-title"><span class="pwt-icon">🔥</span><span class="pwt-text">Basking Bulb — Time of Day</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="baskTimeChart"></div>
-      <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the bulb is on. The scale is trimmed to the active hours — inactive hours are cut out. Months that are off are labeled OFF.</p>
+      <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the bulb is on. Drag the dots at each end of a bar to change that month's start and end time. Months that are off are labeled OFF.</p>
       <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
     </div>
   </details>
@@ -1401,7 +1485,7 @@
     <div class="panel-body">
       <div class="panel-window-title"><span class="pwt-icon">🌡️</span><span class="pwt-text">Temperature — By Month</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="tempChart"></div>
-      <p class="media-hint" style="margin-top:8px;">Each row is a month; bar length and color show the target temperature — blue is cooler, red is warmer, the same heat scale used in the Easy Chart.</p>
+      <p class="media-hint" style="margin-top:8px;">Each row is a month; bar length and color show the target temperature — blue is cooler, red is warmer, the same heat scale used in the Easy Chart. Drag the dot at the end of a bar to change that month's temperature.</p>
       <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
     </div>
   </details>
@@ -1439,17 +1523,45 @@
     <button type="button" class="taskbar-btn" data-panel="nextChange"><span class="taskbar-icon">📅</span><span class="taskbar-label">Timing</span></button>
     <button type="button" class="taskbar-btn" data-panel="logNotesPanel"><span class="taskbar-icon">📝</span><span class="taskbar-label">Log</span></button>
     <button type="button" class="taskbar-btn" data-panel="bodyWeightPanel"><span class="taskbar-icon">⚖️</span><span class="taskbar-label">Weight</span></button>
-    <button type="button" class="taskbar-btn" data-panel="easyChartPanel"><span class="taskbar-icon">🦎</span><span class="taskbar-label">Charts</span></button>
+    <button type="button" class="taskbar-btn" data-panel="easyChartPanel"><span class="taskbar-icon">📊</span><span class="taskbar-label">Charts</span></button>
     <button type="button" class="taskbar-btn" data-panel="uvTimeChartPanel"><span class="taskbar-icon">☀️</span><span class="taskbar-label">UV</span></button>
     <button type="button" class="taskbar-btn" data-panel="baskTimeChartPanel"><span class="taskbar-icon">🔥</span><span class="taskbar-label">Basking</span></button>
     <button type="button" class="taskbar-btn" data-panel="tempChartPanel"><span class="taskbar-icon">🌡️</span><span class="taskbar-label">Temp</span></button>
   </nav>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" onerror="window.__fbLoadFailed = true;"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js" onerror="window.__fbLoadFailed = true;"></script>
   <script>
     const STORAGE_KEY = 'shingleback_wintering_v1';
     const LOG_KEY = 'shingleback_logs_v1';
     const WEIGHT_KEY = 'shingleback_weights_v1';
     const THEME_KEY = 'shingleback_theme_v1';
+
+    // One-time merge of weight entries recovered from a backup file
+    // (Shingleback_Backup_20260812.html — Ripper's birth-to-3-week weigh-ins).
+    // Merges by id, so this is safe to leave in even after it's already applied.
+    (function mergeImportedWeights() {
+      var imported = [
+        { id: 'w-1786576884540', date: '2026-08-14', name: 'Ripper', weight: '187', note: '3 weeks', ts: 1786576884540 },
+        { id: 'w-1786576858392', date: '2026-08-07', name: 'Ripper', weight: '163', note: '2 weeks', ts: 1786576858392 },
+        { id: 'w-1786576805534', date: '2026-07-31', name: 'Ripper', weight: '139', note: '1 week', ts: 1786576805534 },
+        { id: 'w-1786576783168', date: '2026-07-24', name: 'Ripper', weight: '131', note: 'Birth', ts: 1786576783168 }
+      ];
+      try {
+        var existing = JSON.parse(localStorage.getItem(WEIGHT_KEY) || '[]');
+        if (!Array.isArray(existing)) existing = [];
+        var haveIds = {};
+        existing.forEach(function(w) { if (w && w.id) haveIds[w.id] = true; });
+        var added = false;
+        imported.forEach(function(w) {
+          if (!haveIds[w.id]) { existing.push(w); added = true; }
+        });
+        if (added) {
+          existing.sort(function(a, b) { return (b.ts || 0) - (a.ts || 0); });
+          localStorage.setItem(WEIGHT_KEY, JSON.stringify(existing));
+        }
+      } catch (e) {}
+    })();
 
     // ---- Password lock (24h) ----
     const LOCK_KEY = 'shingleback_unlock_until_v1';
@@ -1726,6 +1838,7 @@
 
     function savePeriods() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(periods));
+      schedulePush('periods');
     }
 
     function isInPeriod(m, d, p) {
@@ -1929,7 +2042,146 @@
 
     function saveJSON(key, val) {
       try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { alert('Storage full — could not save.'); }
+      if (key === LOG_KEY) schedulePush('logs');
+      else if (key === WEIGHT_KEY) schedulePush('weights');
     }
+
+    // ---- Cloud sync (Firebase Realtime Database) ----
+    // Shares the same Firebase project as the household task app (the only
+    // one already provisioned) but writes under its own top-level path
+    // ('shingleback/...') so the two apps' data never mix.
+    var FIREBASE_CONFIG = {
+      apiKey: "AIzaSyDWceP3CnO43wj6xSu_FQ2jQ9N-LVxSKr8",
+      authDomain: "household-tasks-cb3ca.firebaseapp.com",
+      databaseURL: "https://household-tasks-cb3ca-default-rtdb.firebaseio.com",
+      projectId: "household-tasks-cb3ca",
+      storageBucket: "household-tasks-cb3ca.firebasestorage.app",
+      messagingSenderId: "719926406482",
+      appId: "1:719926406482:web:28ccdd630bea4531079e8b"
+    };
+
+    var syncRefs = {};
+    var firebaseOK = false;
+    var applyingRemoteUpdate = false;
+    var receivedFirstRemote = { periods: false, logs: false, weights: false };
+    var pushTimers = {};
+
+    function setSyncStatus(mode) {
+      var el = document.getElementById('syncStatus');
+      if (!el) return;
+      el.className = 'sync-status-btn ' + mode;
+      var label = mode === 'online' ? 'Live' : (mode === 'connecting' ? 'Connecting…' : 'Offline');
+      el.title = 'Cloud sync: ' + label + ' — tap to sync now';
+    }
+
+    function pushToFirebase(kind) {
+      var ref = syncRefs[kind];
+      if (!ref) return;
+      var data = kind === 'periods' ? periods : loadJSON(kind === 'logs' ? LOG_KEY : WEIGHT_KEY, []);
+      ref.set(data).catch(function(err) { console.error('Firebase write failed (' + kind + ')', err); });
+    }
+
+    function schedulePush(kind) {
+      if (applyingRemoteUpdate || !firebaseOK) return;
+      clearTimeout(pushTimers[kind]);
+      pushTimers[kind] = setTimeout(function() { pushToFirebase(kind); }, 300);
+    }
+
+    function bindSync(kind, applyRemote) {
+      var ref = syncRefs[kind];
+      ref.on('value', function(snapshot) {
+        var remote = snapshot.val();
+        firebaseOK = true;
+        if (!receivedFirstRemote[kind]) {
+          receivedFirstRemote[kind] = true;
+          if (Array.isArray(remote) && remote.length) {
+            applyingRemoteUpdate = true;
+            applyRemote(remote);
+            applyingRemoteUpdate = false;
+          } else {
+            schedulePush(kind); // nothing in the cloud yet — seed it with what's here
+          }
+          setSyncStatus('online');
+          return;
+        }
+        if (Array.isArray(remote)) {
+          applyingRemoteUpdate = true;
+          applyRemote(remote);
+          applyingRemoteUpdate = false;
+        }
+        setSyncStatus('online');
+      }, function(err) {
+        console.error('Firebase read failed (' + kind + ')', err);
+        firebaseOK = false;
+        setSyncStatus('offline');
+      });
+    }
+
+    function initFirebase() {
+      if (window.__fbLoadFailed || typeof firebase === 'undefined') {
+        console.warn('Firebase SDK unavailable — running in offline/local-only mode.');
+        firebaseOK = false;
+        setSyncStatus('offline');
+        return;
+      }
+      try {
+        setSyncStatus('connecting');
+        if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+        syncRefs.periods = firebase.database().ref('shingleback/periods');
+        syncRefs.logs = firebase.database().ref('shingleback/logs');
+        syncRefs.weights = firebase.database().ref('shingleback/weights');
+
+        bindSync('periods', function(remote) {
+          periods = remote;
+          savePeriods();
+          renderAll();
+        });
+        bindSync('logs', function(remote) {
+          saveJSON(LOG_KEY, remote);
+          renderLogs();
+          renderTimeline();
+        });
+        bindSync('weights', function(remote) {
+          saveJSON(WEIGHT_KEY, remote);
+          renderWeights();
+        });
+      } catch (e) {
+        console.error('Firebase init failed', e);
+        firebaseOK = false;
+        setSyncStatus('offline');
+      }
+    }
+
+    (function setupManualSync() {
+      var btn = document.getElementById('syncStatus');
+      if (!btn) return;
+      btn.addEventListener('click', function() {
+        btn.classList.remove('spinning');
+        void btn.offsetWidth;
+        btn.classList.add('spinning');
+        setTimeout(function() { btn.classList.remove('spinning'); }, 650);
+
+        Object.keys(pushTimers).forEach(function(kind) {
+          if (pushTimers[kind]) { clearTimeout(pushTimers[kind]); pushTimers[kind] = null; pushToFirebase(kind); }
+        });
+
+        if (!firebaseOK || !syncRefs.periods) {
+          initFirebase();
+          return;
+        }
+        ['periods', 'logs', 'weights'].forEach(function(kind) {
+          syncRefs[kind].once('value').then(function(snapshot) {
+            var remote = snapshot.val();
+            if (!Array.isArray(remote)) return;
+            applyingRemoteUpdate = true;
+            if (kind === 'periods') { periods = remote; savePeriods(); renderAll(); }
+            else if (kind === 'logs') { saveJSON(LOG_KEY, remote); renderLogs(); renderTimeline(); }
+            else { saveJSON(WEIGHT_KEY, remote); renderWeights(); }
+            applyingRemoteUpdate = false;
+          }).catch(function(err) { console.error('Manual sync failed (' + kind + ')', err); });
+        });
+      });
+    })();
 
     // ---- Next change countdown ----
     function getUpcomingPeriod() {
@@ -2336,7 +2588,7 @@
           if (minH === null || range.start < minH) minH = range.start;
           if (maxH === null || range.end > maxH) maxH = range.end;
         }
-        monthData.push({ month: MONTHS[m-1], range: range, raw: raw || 'OFF' });
+        monthData.push({ month: MONTHS[m-1], m: m, range: range, raw: raw || 'OFF' });
       }
       if (minH === null) {
         box.innerHTML = '<p class="media-hint">Off all year — no active hours to chart.</p>';
@@ -2358,10 +2610,13 @@
           var widthPct = Math.max(1.5, rightPct - leftPct);
           var midPct = leftPct + widthPct / 2;
           var label = fmtHour24(d.range.start) + '–' + fmtHour24(d.range.end);
-          return '<div class="time-h-row" title="' + d.month + ' — ' + d.raw + '">' +
+          return '<div class="time-h-row" title="' + d.month + ' — ' + d.raw + ' (drag the dots to adjust)">' +
             '<div class="time-h-month">' + d.month + '</div>' +
-            '<div class="time-h-track" style="--tick-step:' + tickStepPct + '">' +
-              '<div class="time-h-bar" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + colorVar + '"></div>' +
+            '<div class="time-h-track" style="--tick-step:' + tickStepPct + '" data-axis-start="' + axis.start + '" data-axis-end="' + axis.end + '">' +
+              '<div class="time-h-bar" data-start="' + d.range.start + '" data-end="' + d.range.end + '" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + colorVar + '">' +
+                '<div class="time-h-handle time-h-handle-start" data-kind="time-start" data-month="' + d.m + '" data-key="' + key + '" style="border-color:' + colorVar + '"></div>' +
+                '<div class="time-h-handle time-h-handle-end" data-kind="time-end" data-month="' + d.m + '" data-key="' + key + '" style="border-color:' + colorVar + '"></div>' +
+              '</div>' +
               '<div class="time-h-bar-label" style="left:' + midPct + '%">' + label + '</div>' +
             '</div>' +
           '</div>';
@@ -2417,7 +2672,7 @@
           if (minV === null || val < minV) minV = val;
           if (maxV === null || val > maxV) maxV = val;
         }
-        monthData.push({ month: MONTHS[m-1], value: val, raw: raw || '—' });
+        monthData.push({ month: MONTHS[m-1], m: m, value: val, raw: raw || '—' });
       }
       if (minV === null) {
         box.innerHTML = '<p class="media-hint">No temperature data to chart.</p>';
@@ -2441,11 +2696,13 @@
         }
         var widthPct = Math.max(2, ((d.value - axis.start) / axisSpan) * 100);
         var tc = tempToColor(d.raw);
-        return '<div class="time-h-row" title="' + d.month + ' — ' + d.raw + '">' +
+        return '<div class="time-h-row" title="' + d.month + ' — ' + d.raw + ' (drag the dot to adjust)">' +
           '<div class="time-h-month">' + d.month + '</div>' +
-          '<div class="time-h-track" style="--tick-step:' + tickStepPct + '">' +
-            '<div class="time-h-bar-mag" style="width:' + widthPct + '%;background:' + tc.color + '"></div>' +
-            '<div class="time-h-bar-mag-label" style="left:calc(' + widthPct + '% + 8px)">' + d.value + '°F</div>' +
+          '<div class="time-h-track" style="--tick-step:' + tickStepPct + '" data-axis-start="' + axis.start + '" data-axis-end="' + axis.end + '">' +
+            '<div class="time-h-bar-mag" data-value="' + d.value + '" style="width:' + widthPct + '%;background:' + tc.color + '">' +
+              '<div class="time-h-handle time-h-mag-handle" data-kind="temp" data-month="' + d.m + '" data-key="temp" style="border-color:' + tc.color + '"></div>' +
+            '</div>' +
+            '<div class="time-h-bar-mag-label" style="left:calc(' + widthPct + '% + 22px)">' + d.value + '°F</div>' +
           '</div>' +
         '</div>';
       }).join('');
@@ -2459,6 +2716,125 @@
           rows +
         '</div>';
     }
+
+    // ---- Touch/mouse dragging on the UV, Basking, and Temperature bars ----
+    // Uses Pointer Events (covers touch, mouse, and pen with one code path).
+    // Handles are delegated off document so re-rendering the chart (innerHTML
+    // swap) never leaves a stale listener behind.
+    (function setupChartDragging() {
+      var drag = null; // active drag state, or null
+
+      // Allow the finger/pointer to travel a bit past the visible track edge —
+      // the chart's axis is fit tightly to the current data (by design, so
+      // "dead" hours/values don't take up space), which would otherwise trap
+      // the coldest/earliest/latest month exactly at the wall with no room to
+      // drag further. The extra reach lets you push past the current edge;
+      // releasing recomputes the axis to fit the new value.
+      function fractionFromEvent(track, clientX) {
+        var rect = track.getBoundingClientRect();
+        if (!rect.width) return 0;
+        return Math.max(-0.6, Math.min(1.6, (clientX - rect.left) / rect.width));
+      }
+
+      function snap(value, step, lo, hi) {
+        var snapped = Math.round(value / step) * step;
+        return Math.max(lo, Math.min(hi, snapped));
+      }
+
+      document.addEventListener('pointerdown', function(e) {
+        var handle = e.target.closest('.time-h-handle');
+        if (!handle) return;
+        var track = handle.closest('.time-h-track');
+        var row = handle.closest('.time-h-row');
+        if (!track || !row) return;
+        var kind = handle.dataset.kind;
+        var bar = kind === 'temp' ? row.querySelector('.time-h-bar-mag') : row.querySelector('.time-h-bar');
+        if (!bar) return;
+        e.preventDefault();
+        drag = {
+          handle: handle,
+          track: track,
+          row: row,
+          bar: bar,
+          kind: kind,
+          key: handle.dataset.key,
+          month: parseInt(handle.dataset.month, 10),
+          axisStart: parseFloat(track.dataset.axisStart),
+          axisEnd: parseFloat(track.dataset.axisEnd),
+          pointerId: e.pointerId
+        };
+        try { handle.setPointerCapture(e.pointerId); } catch (err) {}
+        handle.classList.add('dragging');
+        row.classList.add('row-dragging');
+      });
+
+      document.addEventListener('pointermove', function(e) {
+        if (!drag || e.pointerId !== drag.pointerId) return;
+        e.preventDefault();
+        var f = fractionFromEvent(drag.track, e.clientX);
+        var span = drag.axisEnd - drag.axisStart;
+        if (drag.kind === 'temp') {
+          // Absolute bounds, not the current axis — lets the coldest/warmest
+          // month keep moving even when it's already sitting at the axis edge.
+          var val = snap(drag.axisStart + f * span, 1, 30, 115);
+          drag.bar.dataset.value = val;
+          var widthPct = Math.max(2, ((val - drag.axisStart) / span) * 100);
+          drag.bar.style.width = widthPct + '%';
+          var tc = tempToColor(val + '°F');
+          drag.bar.style.background = tc.color;
+          var magLabel = drag.row.querySelector('.time-h-bar-mag-label');
+          if (magLabel) {
+            magLabel.textContent = val + '°F';
+            magLabel.style.left = 'calc(' + widthPct + '% + 22px)';
+          }
+        } else {
+          // 0–24h absolute bounds, not the current axis — same reasoning as above.
+          var h = snap(drag.axisStart + f * span, 0.25, 0, 24);
+          var start = parseFloat(drag.bar.dataset.start);
+          var end = parseFloat(drag.bar.dataset.end);
+          var minGap = 0.5;
+          if (drag.kind === 'time-start') {
+            start = Math.max(0, Math.min(h, end - minGap));
+          } else {
+            end = Math.min(24, Math.max(h, start + minGap));
+          }
+          drag.bar.dataset.start = start;
+          drag.bar.dataset.end = end;
+          var leftPct = ((start - drag.axisStart) / span) * 100;
+          var rightPct = ((end - drag.axisStart) / span) * 100;
+          var wPct = Math.max(1.5, rightPct - leftPct);
+          drag.bar.style.left = leftPct + '%';
+          drag.bar.style.width = wPct + '%';
+          var timeLabel = drag.row.querySelector('.time-h-bar-label');
+          if (timeLabel) {
+            timeLabel.textContent = fmtHour24(start) + '–' + fmtHour24(end);
+            timeLabel.style.left = (leftPct + wPct / 2) + '%';
+          }
+        }
+      });
+
+      function endDrag(e) {
+        if (!drag || e.pointerId !== drag.pointerId) return;
+        var p = primaryPeriodForMonth(drag.month);
+        if (p) {
+          if (drag.kind === 'temp') {
+            p.temp = Math.round(parseFloat(drag.bar.dataset.value)) + '°F';
+          } else {
+            var start = parseFloat(drag.bar.dataset.start);
+            var end = parseFloat(drag.bar.dataset.end);
+            p[drag.key] = fmtHour24(start) + ' – ' + fmtHour24(end);
+          }
+          savePeriods();
+        }
+        drag.handle.classList.remove('dragging');
+        drag.row.classList.remove('row-dragging');
+        drag = null;
+        renderAll();
+      }
+
+      document.addEventListener('pointerup', endDrag);
+      document.addEventListener('pointercancel', endDrag);
+    })();
 
     function renderAll() {
       renderToday();
@@ -2599,22 +2975,19 @@
       }, null, 2);
     }
 
-    function todayStamp() {
-      const d = new Date();
-      return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
-    }
+    var ORIGINAL_FILE_BASENAME = 'shingleback_wintering_dashboard';
 
     function saveAsHtmlBackup() {
       const overlay = document.getElementById('saveBackupOverlay');
       if (overlay) overlay.classList.remove('open'); // hide it first so it isn't captured mid-modal in the snapshot
       const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
       if (overlay) overlay.classList.add('open'); // synchronous — no visible flicker
-      saveFileWithPicker(html, 'Shingleback_Backup_' + todayStamp() + '.html', 'text/html', 'html', 'HTML file');
+      saveFileWithPicker(html, ORIGINAL_FILE_BASENAME + '.html', 'text/html', 'html', 'HTML file');
     }
 
     function saveAsJsonBackup() {
       const json = buildBackupJson();
-      saveFileWithPicker(json, 'Shingleback_Backup_' + todayStamp() + '.json', 'application/json', 'json', 'JSON file');
+      saveFileWithPicker(json, ORIGINAL_FILE_BASENAME + '.json', 'application/json', 'json', 'JSON file');
     }
 
     function openSaveBackupModal() {
@@ -2917,6 +3290,7 @@
     initLock();
     initTheme();
     renderAll();
+    initFirebase();
 
     setInterval(() => {
       const now = new Date();
