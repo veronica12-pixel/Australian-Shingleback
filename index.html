@@ -1443,7 +1443,19 @@
       color: var(--text-muted);
       border-radius: 12px;
     }
-    .taskbar-icon { font-size: 1.5rem; line-height: 1; opacity: 0.75; }
+    .taskbar-icon { font-size: 1.5rem; line-height: 1; opacity: 0.75; position: relative; }
+    .taskbar-days-box {
+      font-size: 1.15rem;
+      font-weight: 800;
+      opacity: 1;
+      background: var(--param-bg);
+      color: var(--accent);
+      border-radius: 8px;
+      padding: 2px 8px;
+      line-height: 1.3;
+      min-width: 26px;
+      text-align: center;
+    }
     .taskbar-label {
       font-size: 0.62rem;
       font-weight: 700;
@@ -1632,7 +1644,7 @@
 
   <nav class="bottom-taskbar" id="bottomTaskbar">
     <button type="button" class="taskbar-btn" data-home="true"><span class="taskbar-icon">🏠</span><span class="taskbar-label">Home</span></button>
-    <button type="button" class="taskbar-btn" data-panel="nextChange"><span class="taskbar-icon">📅</span><span class="taskbar-label">Timing</span></button>
+    <button type="button" class="taskbar-btn" data-panel="nextChange"><span class="taskbar-icon taskbar-days-box" id="timingDaysBadge">—</span><span class="taskbar-label">Timing</span></button>
     <button type="button" class="taskbar-btn" data-panel="logNotesPanel"><span class="taskbar-icon">📝</span><span class="taskbar-label">Log</span></button>
     <button type="button" class="taskbar-btn" data-panel="bodyWeightPanel"><span class="taskbar-icon">⚖️</span><span class="taskbar-label">Weight</span></button>
     <button type="button" class="taskbar-btn" data-panel="easyChartPanel"><span class="taskbar-icon">📊</span><span class="taskbar-label">Charts</span></button>
@@ -2398,11 +2410,13 @@
     function renderNextChange() {
       const el = document.getElementById('ncMain');
       const det = document.getElementById('ncDetail');
+      const badge = document.getElementById('timingDaysBadge');
       if (!el) return;
       const up = getUpcomingPeriod();
       if (!up) {
         el.textContent = 'No upcoming changes';
         det.innerHTML = '';
+        if (badge) badge.textContent = '';
         return;
       }
       const now = new Date();
@@ -2416,6 +2430,7 @@
         '<div class="nc-line">UV ' + up.period.uv + '</div>' +
         '<div class="nc-line">Basking ' + up.period.basking + '</div>' +
         '<div class="nc-line">' + dateStr + '</div>';
+      if (badge) badge.textContent = days;
     }
 
     // ---- Log Notes ----
@@ -2622,21 +2637,34 @@
         var lastX = xFor(last.ts), lastY = yFor(last.value);
         var labelAnchor = lastX > W - padR - 30 ? 'end' : 'start';
         var labelX = lastX + (labelAnchor === 'end' ? -8 : 8);
-        var endLabel = '<text x="' + labelX + '" y="' + (lastY - 8) + '" text-anchor="' + labelAnchor + '" font-size="11" font-weight="800" fill="' + color + '">' + last.value + 'g</text>';
+        // Show the lizard's name alongside its final weight when there's more
+        // than one series on the chart, so each line is identifiable at a glance.
+        var endLabelText = (order.length > 1 && key !== 'Weight') ? (key + ' ' + last.value + 'g') : (last.value + 'g');
+        var endLabel = '<text x="' + labelX + '" y="' + (lastY - 8) + '" text-anchor="' + labelAnchor + '" font-size="11" font-weight="800" fill="' + color + '">' + endLabelText + '</text>';
         return '<path d="' + path + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' + dots + endLabel;
       }).join('');
 
+      // Show the legend whenever at least one series has a real lizard name
+      // (not just the generic "Weight" fallback used when no name was entered).
+      var hasNamedSeries = order.some(function(key) { return key !== 'Weight'; });
       var legendHtml = '';
-      if (order.length > 1) {
+      if (order.length > 1 || hasNamedSeries) {
         legendHtml = '<div class="weight-chart-legend">' + order.map(function(key, si) {
           var color = WEIGHT_CHART_COLORS[si % WEIGHT_CHART_COLORS.length];
           return '<span class="weight-chart-legend-item"><span class="weight-chart-legend-dot" style="background:' + color + '"></span>' + key + '</span>';
         }).join('') + '</div>';
       }
 
+      // Title: name the lizard when there's exactly one named series;
+      // for multiple lizards the legend below already labels each line.
+      var chartTitle = 'Weight over time';
+      if (order.length === 1 && hasNamedSeries) {
+        chartTitle = order[0] + ' — weight over time';
+      }
+
       box.innerHTML =
         '<div class="weight-chart-wrap">' +
-          '<div class="weight-chart-title">Weight over time</div>' +
+          '<div class="weight-chart-title">' + chartTitle + '</div>' +
           '<svg class="weight-chart-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet">' +
             gridSvg + xLabelsSvg + seriesSvg +
           '</svg>' +
