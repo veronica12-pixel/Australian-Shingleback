@@ -853,6 +853,47 @@
     .log-list, .track-list, .prep-list {
       margin-top: 10px;
     }
+    .weight-chart-wrap {
+      margin-top: 14px;
+      padding: 14px 12px 10px;
+      background: var(--card-alt);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .weight-chart-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .weight-chart-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+    .weight-chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 10px;
+    }
+    .weight-chart-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .weight-chart-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
     .log-item, .track-item {
       padding: 10px 10px; border-bottom: 1px solid var(--border);
       font-size: 1.05rem;
@@ -1499,6 +1540,7 @@
         <input type="text" id="weightNote" placeholder="Note (optional)">
         <button type="button" class="btn-small" id="weightAddBtn">Save weight</button>
       </div>
+      <div id="weightChart"></div>
       <div class="track-list" id="weightList"></div>
       <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
     </div>
@@ -2474,12 +2516,141 @@
     }
 
     // ---- Weight ----
+    var WEIGHT_CHART_COLORS = ['#558b2f', '#eb6834', '#2a78d6', '#8e24aa', '#c62828'];
+
+    function niceStep(rough) {
+      if (!isFinite(rough) || rough <= 0) return 1;
+      var mag = Math.pow(10, Math.floor(Math.log10(rough)));
+      var norm = rough / mag;
+      var niceNorm = norm <= 1 ? 1 : (norm <= 2 ? 2 : (norm <= 5 ? 5 : 10));
+      return niceNorm * mag;
+    }
+
+    function computeWeightAxis(minV, maxV) {
+      if (minV === maxV) { minV -= 5; maxV += 5; }
+      var step = niceStep((maxV - minV) / 4);
+      var start = Math.floor(minV / step) * step;
+      var end = Math.ceil(maxV / step) * step;
+      if (start === end) end = start + step;
+      var ticks = [];
+      for (var v = start; v <= end + 0.0001; v += step) ticks.push(Math.min(v, end));
+      return { start: start, end: end, step: step, ticks: ticks };
+    }
+
+    function fmtChartDate(dateStr) {
+      var parts = String(dateStr || '').split('-');
+      if (parts.length !== 3) return dateStr || '';
+      var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var mi = parseInt(parts[1], 10) - 1;
+      return (MON[mi] || '') + ' ' + parseInt(parts[2], 10);
+    }
+
+    function renderWeightChart(rows) {
+      var box = document.getElementById('weightChart');
+      if (!box) return;
+      var valid = (rows || []).filter(function(r) {
+        return r && r.date && r.weight !== '' && r.weight !== null && !isNaN(parseFloat(r.weight));
+      });
+      if (valid.length < 2) {
+        box.innerHTML = '';
+        return;
+      }
+
+      // Group into series by lizard name (blank name = one shared "Weight" series)
+      var groups = {};
+      var order = [];
+      valid.forEach(function(r) {
+        var key = (r.name || '').trim() || 'Weight';
+        if (!groups[key]) { groups[key] = []; order.push(key); }
+        groups[key].push({ date: r.date, value: parseFloat(r.weight), ts: new Date(r.date + 'T00:00:00').getTime() });
+      });
+      order.forEach(function(key) {
+        groups[key].sort(function(a, b) { return a.ts - b.ts; });
+      });
+      // Series with only one point can't draw a line — drop them from the chart
+      // (they still show in the list below; this view is specifically the trend).
+      order = order.filter(function(key) { return groups[key].length >= 2; });
+      if (!order.length) { box.innerHTML = ''; return; }
+
+      var allPoints = order.reduce(function(acc, key) { return acc.concat(groups[key]); }, []);
+      var minV = Math.min.apply(null, allPoints.map(function(p) { return p.value; }));
+      var maxV = Math.max.apply(null, allPoints.map(function(p) { return p.value; }));
+      var minTs = Math.min.apply(null, allPoints.map(function(p) { return p.ts; }));
+      var maxTs = Math.max.apply(null, allPoints.map(function(p) { return p.ts; }));
+      var axis = computeWeightAxis(minV, maxV);
+      var axisSpan = axis.end - axis.start || 1;
+      var tsSpan = (maxTs - minTs) || 1;
+
+      var W = 320, H = 190;
+      var padL = 38, padR = 14, padT = 14, padB = 26;
+      var plotW = W - padL - padR, plotH = H - padT - padB;
+
+      function xFor(ts) { return padL + ((ts - minTs) / tsSpan) * plotW; }
+      function yFor(v) { return padT + (1 - (v - axis.start) / axisSpan) * plotH; }
+
+      var gridSvg = axis.ticks.map(function(v) {
+        var y = yFor(v);
+        return '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="var(--border)" stroke-width="1"/>' +
+          '<text x="' + (padL - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-size="10" fill="var(--text-muted)">' + Math.round(v) + '</text>';
+      }).join('');
+
+      // X-axis: first, last, and (if there's room) one middle date
+      var xTsList = [minTs];
+      if (maxTs !== minTs) {
+        if (order.some(function(k) { return groups[k].length >= 3; }) || allPoints.length >= 5) {
+          xTsList.push(minTs + tsSpan / 2);
+        }
+        xTsList.push(maxTs);
+      }
+      var xLabelsSvg = xTsList.map(function(ts) {
+        var x = xFor(ts);
+        var anchor = x < padL + 20 ? 'start' : (x > W - padR - 20 ? 'end' : 'middle');
+        return '<text x="' + x + '" y="' + (H - 6) + '" text-anchor="' + anchor + '" font-size="10" fill="var(--text-muted)">' + fmtChartDate(new Date(ts).toISOString().slice(0, 10)) + '</text>';
+      }).join('');
+
+      var seriesSvg = order.map(function(key, si) {
+        var color = WEIGHT_CHART_COLORS[si % WEIGHT_CHART_COLORS.length];
+        var pts = groups[key];
+        var path = pts.map(function(p, i) {
+          return (i === 0 ? 'M' : 'L') + xFor(p.ts).toFixed(1) + ',' + yFor(p.value).toFixed(1);
+        }).join(' ');
+        var dots = pts.map(function(p) {
+          var title = key + ' — ' + fmtChartDate(p.date) + ': ' + p.value + ' g';
+          return '<circle cx="' + xFor(p.ts).toFixed(1) + '" cy="' + yFor(p.value).toFixed(1) + '" r="4" fill="' + color + '" stroke="var(--card-alt)" stroke-width="2"><title>' + title + '</title></circle>';
+        }).join('');
+        var last = pts[pts.length - 1];
+        var lastX = xFor(last.ts), lastY = yFor(last.value);
+        var labelAnchor = lastX > W - padR - 30 ? 'end' : 'start';
+        var labelX = lastX + (labelAnchor === 'end' ? -8 : 8);
+        var endLabel = '<text x="' + labelX + '" y="' + (lastY - 8) + '" text-anchor="' + labelAnchor + '" font-size="11" font-weight="800" fill="' + color + '">' + last.value + 'g</text>';
+        return '<path d="' + path + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' + dots + endLabel;
+      }).join('');
+
+      var legendHtml = '';
+      if (order.length > 1) {
+        legendHtml = '<div class="weight-chart-legend">' + order.map(function(key, si) {
+          var color = WEIGHT_CHART_COLORS[si % WEIGHT_CHART_COLORS.length];
+          return '<span class="weight-chart-legend-item"><span class="weight-chart-legend-dot" style="background:' + color + '"></span>' + key + '</span>';
+        }).join('') + '</div>';
+      }
+
+      box.innerHTML =
+        '<div class="weight-chart-wrap">' +
+          '<div class="weight-chart-title">Weight over time</div>' +
+          '<svg class="weight-chart-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet">' +
+            gridSvg + xLabelsSvg + seriesSvg +
+          '</svg>' +
+          legendHtml +
+        '</div>';
+    }
+
     function renderWeights() {
       const list = document.getElementById('weightList');
       if (!list) return;
       const dateInp = document.getElementById('weightDate');
       if (dateInp && !dateInp.value) dateInp.value = todayKey();
       const rows = loadJSON(WEIGHT_KEY, []);
+      renderWeightChart(rows);
       if (!rows.length) {
         list.innerHTML = '<div class="track-item" style="color:var(--text-muted)">No weights logged</div>';
         return;
