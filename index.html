@@ -744,6 +744,13 @@
       text-align: left;
     }
     .btn-modal:active { background: var(--accent-dim); color: #fff; }
+    .btn-modal-danger {
+      text-align: center;
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+    .btn-modal-danger:active { background: #b71c1c; }
     .modal-hint {
       font-size: 0.72rem;
       color: var(--text-muted);
@@ -804,9 +811,9 @@
     .next-change .nc-main { font-size: 1.05rem; font-weight: 700; color: var(--accent); margin-top: 4px; }
     .next-change .nc-detail { font-size: 0.88rem; color: var(--text-muted); margin-top: 4px; }
     .next-change-drop .panel-body { padding: 4px 16px 16px 26px; }
-    .next-change-drop .nc-main { font-size: 1.05rem; font-weight: 700; color: var(--accent); margin-top: 4px; }
-    .next-change-drop .nc-detail { margin-top: 6px; display: flex; flex-direction: column; gap: 5px; }
-    .next-change-drop .nc-line { font-size: 0.88rem; color: var(--text-muted); }
+    .next-change-drop .nc-main { font-size: 1.35rem; font-weight: 700; color: var(--accent); margin-top: 4px; }
+    .next-change-drop .nc-detail { margin-top: 10px; display: flex; flex-direction: column; gap: 9px; }
+    .next-change-drop .nc-line { font-size: 1.12rem; color: var(--text-muted); }
     .panel {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 14px; padding: 14px; margin-bottom: 14px;
@@ -830,7 +837,7 @@
     .log-form input, .log-form textarea, .track-form input, .track-form select,
     .panel input, .panel textarea, .panel select {
       width: 100%; padding: 10px 12px; border: 1px solid var(--border);
-      border-radius: 8px; font-size: 1rem; background: var(--input-bg);
+      border-radius: 8px; font-size: 1.12rem; background: var(--input-bg);
       color: var(--text); font-family: inherit;
     }
     .log-form textarea { min-height: 56px; resize: vertical; }
@@ -838,7 +845,7 @@
     .btn-small {
       padding: 10px 14px; border-radius: 10px; border: none;
       background: var(--accent); color: #fff; font-weight: 600;
-      font-size: 0.88rem; cursor: pointer;
+      font-size: 1rem; cursor: pointer;
     }
     .btn-small.secondary {
       background: var(--card-alt); color: var(--accent); border: 1px solid var(--border);
@@ -847,11 +854,14 @@
       margin-top: 10px;
     }
     .log-item, .track-item {
-      padding: 8px 10px; border-bottom: 1px solid var(--border);
-      font-size: 0.88rem;
+      padding: 10px 10px; border-bottom: 1px solid var(--border);
+      font-size: 1.05rem;
     }
     .log-item .log-date, .track-item .track-date {
-      font-size: 0.72rem; color: var(--text-muted); font-weight: 600;
+      font-size: 0.88rem; color: var(--text-muted); font-weight: 600;
+    }
+    .log-form label, .track-form label {
+      font-size: 0.85rem !important;
     }
     .prep-item {
       display: flex; align-items: flex-start; gap: 8px;
@@ -1333,6 +1343,50 @@
       box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
       padding: 6px 2px calc(6px + var(--safe-bottom));
     }
+
+    .undo-toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(84px + var(--safe-bottom));
+      transform: translate(-50%, 16px);
+      z-index: 600;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #2b2f27;
+      color: #ffffff;
+      padding: 13px 16px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      max-width: calc(100% - 32px);
+      width: max-content;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    .undo-toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+      pointer-events: auto;
+    }
+    .undo-toast-msg {
+      font-size: 0.95rem;
+      font-weight: 600;
+      flex: 1;
+      min-width: 0;
+    }
+    .undo-toast-btn {
+      background: none;
+      border: none;
+      color: #9ccc65;
+      font-weight: 800;
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      padding: 6px 4px;
+      flex-shrink: 0;
+    }
     .taskbar-btn {
       flex: 1;
       min-width: 0;
@@ -1505,6 +1559,11 @@
     <span class="footer-copyright" id="footerCopyright" title="Click to save a backup">© Thor 2026</span>
   </div>
 
+  <div class="undo-toast" id="undoToast" role="status" aria-live="polite">
+    <span class="undo-toast-msg" id="undoToastMsg"></span>
+    <button type="button" class="undo-toast-btn" id="undoToastBtn">Undo</button>
+  </div>
+
   <div class="modal-overlay" id="saveBackupOverlay" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="saveBackupTitle">
       <div class="modal-title" id="saveBackupTitle">💾 Save a Backup</div>
@@ -1515,6 +1574,17 @@
       </div>
       <p class="modal-hint" id="saveBackupHint"></p>
       <button type="button" class="btn-modal-cancel" id="saveBackupCancel">Cancel</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="confirmDeleteOverlay" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
+      <div class="modal-title" id="confirmDeleteTitle">🗑️ Delete this entry?</div>
+      <p class="modal-text" id="confirmDeleteText">This can be undone right after deleting.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn-modal btn-modal-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+      <button type="button" class="btn-modal-cancel" id="confirmDeleteCancel">Cancel</button>
     </div>
   </div>
 
@@ -2020,11 +2090,91 @@
       }, 50);
     }
 
+    // ---- Undo toast (used by every delete action) ----
+    var undoTimer = null;
+    var currentUndo = null;
+
+    function showUndoToast(message, restoreFn) {
+      var toast = document.getElementById('undoToast');
+      var msgEl = document.getElementById('undoToastMsg');
+      if (!toast || !msgEl) return;
+      clearTimeout(undoTimer);
+      currentUndo = restoreFn;
+      msgEl.textContent = message;
+      toast.classList.add('show');
+      undoTimer = setTimeout(function() {
+        toast.classList.remove('show');
+        currentUndo = null;
+      }, 6000);
+    }
+
+    (function setupUndoToastButton() {
+      var btn = document.getElementById('undoToastBtn');
+      if (!btn) return;
+      btn.addEventListener('click', function() {
+        clearTimeout(undoTimer);
+        document.getElementById('undoToast').classList.remove('show');
+        if (currentUndo) {
+          var fn = currentUndo;
+          currentUndo = null;
+          fn();
+        }
+      });
+    })();
+
+    // ---- Confirm-delete modal (shown before every delete; undo toast follows after) ----
+    var pendingDelete = null;
+
+    function confirmThenDelete(message, deleteFn) {
+      var overlay = document.getElementById('confirmDeleteOverlay');
+      var textEl = document.getElementById('confirmDeleteText');
+      if (!overlay || !textEl) { deleteFn(); return; }
+      textEl.textContent = message;
+      pendingDelete = deleteFn;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeConfirmDelete() {
+      var overlay = document.getElementById('confirmDeleteOverlay');
+      if (overlay) { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
+      pendingDelete = null;
+    }
+
+    (function setupConfirmDeleteModal() {
+      var overlay = document.getElementById('confirmDeleteOverlay');
+      var confirmBtn = document.getElementById('confirmDeleteBtn');
+      var cancelBtn = document.getElementById('confirmDeleteCancel');
+      if (!overlay || !confirmBtn || !cancelBtn) return;
+      confirmBtn.addEventListener('click', function() {
+        var fn = pendingDelete;
+        closeConfirmDelete();
+        if (fn) fn();
+      });
+      cancelBtn.addEventListener('click', closeConfirmDelete);
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeConfirmDelete();
+      });
+    })();
+
     function handleDelete(id) {
-      if (!confirm('Delete this period? This cannot be undone.')) return;
-      periods = periods.filter(x => x.id !== id);
+      confirmThenDelete('Delete this period? You\'ll get a few seconds to undo it after.', function() {
+        performDeletePeriod(id);
+      });
+    }
+
+    function performDeletePeriod(id) {
+      const idx = periods.findIndex(x => x.id === id);
+      if (idx === -1) return;
+      const removed = periods[idx];
+      periods.splice(idx, 1);
       savePeriods();
       renderAll();
+      showUndoToast('Period deleted', function() {
+        periods.splice(idx, 0, removed);
+        savePeriods();
+        renderAll();
+      });
     }
 
     function todayKey() {
@@ -2272,12 +2422,28 @@
     }
 
     function deleteLog(id) {
-      if (!id || !confirm('Delete this log entry?')) return;
-      let logs = loadJSON(LOG_KEY, []);
-      logs = logs.filter(function(L) { return L.id !== id; });
+      if (!id) return;
+      confirmThenDelete('Delete this log entry? You\'ll get a few seconds to undo it after.', function() {
+        performDeleteLog(id);
+      });
+    }
+
+    function performDeleteLog(id) {
+      var logs = loadJSON(LOG_KEY, []);
+      var idx = logs.findIndex(function(L) { return L.id === id; });
+      if (idx === -1) return;
+      var removed = logs[idx];
+      logs.splice(idx, 1);
       saveJSON(LOG_KEY, logs);
       renderLogs();
       renderTimeline();
+      showUndoToast('Log entry deleted', function() {
+        var cur = loadJSON(LOG_KEY, []);
+        cur.splice(idx, 0, removed);
+        saveJSON(LOG_KEY, cur);
+        renderLogs();
+        renderTimeline();
+      });
     }
 
     function editLog(id) {
@@ -2358,10 +2524,26 @@
     }
 
     function deleteWeight(id) {
-      if (!id || !confirm('Delete this weight entry?')) return;
-      var rows = loadJSON(WEIGHT_KEY, []).filter(function(r) { return r.id !== id; });
+      if (!id) return;
+      confirmThenDelete('Delete this weight entry? You\'ll get a few seconds to undo it after.', function() {
+        performDeleteWeight(id);
+      });
+    }
+
+    function performDeleteWeight(id) {
+      var rows = loadJSON(WEIGHT_KEY, []);
+      var idx = rows.findIndex(function(r) { return r.id === id; });
+      if (idx === -1) return;
+      var removed = rows[idx];
+      rows.splice(idx, 1);
       saveJSON(WEIGHT_KEY, rows);
       renderWeights();
+      showUndoToast('Weight entry deleted', function() {
+        var cur = loadJSON(WEIGHT_KEY, []);
+        cur.splice(idx, 0, removed);
+        saveJSON(WEIGHT_KEY, cur);
+        renderWeights();
+      });
     }
 
     function editWeight(id) {
