@@ -636,6 +636,14 @@
       color: var(--text-muted);
       padding-bottom: 8px;
     }
+    .app-version {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      opacity: 0.85;
+    }
     .footer-copyright {
       cursor: pointer;
       border-radius: 6px;
@@ -1560,7 +1568,7 @@
       <div class="nc-label">Next schedule change</div>
       <div class="nc-main" id="ncMain">—</div>
       <div class="nc-detail" id="ncDetail"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1576,7 +1584,7 @@
         <button type="button" class="btn-small" id="logAddBtn">Add log entry</button>
       </div>
       <div class="log-list" id="logList"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1616,7 +1624,7 @@
       </div>
       <div id="weightChart"></div>
       <div class="track-list" id="weightList"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1626,7 +1634,7 @@
       <div class="panel-window-title"><span class="pwt-icon">📊</span><span class="pwt-text">Charts</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div class="kid-chart" id="kidChart"></div>
       <p class="media-hint" style="margin-top:8px;">Warmth, UV hours, and basking hours across the year.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1636,7 +1644,7 @@
       <div class="panel-window-title"><span class="pwt-icon">☀️</span><span class="pwt-text">UV Lights — Time of Day</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="uvTimeChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the lights are on. Drag the dots at each end of a bar to change that month's start and end time. Months that are off are labeled OFF.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1646,7 +1654,7 @@
       <div class="panel-window-title"><span class="pwt-icon">🔥</span><span class="pwt-text">Basking Bulb — Time of Day</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="baskTimeChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the bulb is on. Drag the dots at each end of a bar to change that month's start and end time. Months that are off are labeled OFF.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1656,7 +1664,7 @@
       <div class="panel-window-title"><span class="pwt-icon">🌡️</span><span class="pwt-text">Temperature — By Month</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="tempChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; bar length and color show the target temperature — blue is cooler, red is warmer, the same heat scale used in the Easy Chart. Drag the dot at the end of a bar to change that month's temperature.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1672,7 +1680,7 @@
   <div id="printSheet" aria-hidden="true"></div>
 
   <div class="footer-note">
-    <span class="footer-copyright" id="footerCopyright" title="Click to save a backup">© Thor 2026</span>
+    <span class="footer-copyright" id="footerCopyright" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span>
   </div>
 
   <div class="undo-toast" id="undoToast" role="status" aria-live="polite">
@@ -1725,6 +1733,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" onerror="window.__fbLoadFailed = true;"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js" onerror="window.__fbLoadFailed = true;"></script>
   <script>
+    const APP_VERSION = 'v1.7';
+    const APP_VERSION_DATE = 'Oct 11, 2026';
     const STORAGE_KEY = 'shingleback_wintering_v1';
     const LOG_KEY = 'shingleback_logs_v1';
     const WEIGHT_KEY = 'shingleback_weights_v1';
@@ -3648,6 +3658,7 @@
       return JSON.stringify({
         exportedAt: new Date().toISOString(),
         app: 'Australian Shingleback Brumation Program',
+        version: APP_VERSION + ' (' + APP_VERSION_DATE + ')',
         periods: periods,
         logs: loadJSON(LOG_KEY, []),
         weights: loadJSON(WEIGHT_KEY, []),
@@ -3727,7 +3738,7 @@
 
       sheet.innerHTML =
         '<h1>Australian Shingleback Brumation Program</h1>' +
-        '<div class="sub">Condensed schedule · Black &amp; white print · © Thor 2026</div>' +
+        '<div class="sub">Condensed schedule · Black &amp; white print · © Thor 2026 · Version ' + APP_VERSION + '</div>' +
         todayHtml +
         nextHtml +
         '<h2>Full schedule</h2>' +
