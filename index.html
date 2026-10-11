@@ -636,6 +636,17 @@
       color: var(--text-muted);
       padding-bottom: 8px;
     }
+    .sync-line {
+      display: block;
+      margin: 6px auto 0;
+      max-width: 340px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .sync-line.online { color: var(--accent); }
+    .sync-line.connecting { color: var(--text-muted); }
+    .sync-line.offline { color: var(--warning); }
     .app-version {
       display: block;
       margin-top: 4px;
@@ -1505,6 +1516,43 @@
     .weight-col-empty { padding: 14px 10px; font-size: 0.85rem; color: var(--text-muted); text-align: center; }
     .weight-col .weight-edit-form input, .weight-col .weight-edit-form select { font-size: 1rem !important; padding: 8px !important; }
     .weight-col .weight-edit-form .row-btns .btn-small { min-width: 0; }
+    .liz-drop {
+      background: var(--card);
+      border: 2px solid var(--liz, var(--accent));
+      border-radius: 14px;
+      overflow: hidden;
+      margin-top: 12px;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+    }
+    .liz-drop-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 14px; cursor: pointer; list-style: none;
+      background: var(--liz, var(--accent)); color: #fff;
+      background-image: linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0) 60%);
+      text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+      user-select: none; -webkit-user-select: none;
+    }
+    .liz-drop-head::-webkit-details-marker { display: none; }
+    .liz-drop-head::after { content: "🦎"; font-size: 1rem; margin-left: 2px; text-shadow: none; }
+    .liz-drop[open] > .liz-drop-head::after { opacity: 0.6; }
+    .liz-drop-name { font-size: 1.15rem; font-weight: 800; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .liz-drop-meta { font-size: 0.85rem; font-weight: 700; background: rgba(255,255,255,0.25); border-radius: 10px; padding: 2px 9px; white-space: nowrap; }
+    .liz-drop-body { padding: 4px 8px 10px; }
+    @media (max-width: 380px) {
+      .bottom-taskbar { padding-left: 1px; padding-right: 1px; }
+      .taskbar-btn { margin: 0 1px 4px; padding: 6px 0; }
+      .taskbar-label { font-size: 0.56rem; letter-spacing: -0.2px; }
+      .taskbar-icon { font-size: 1.3rem; }
+      .liz-drop-head { padding: 12px 12px; gap: 8px; }
+      .liz-drop-name { font-size: 1.05rem; }
+      .liz-drop-meta { font-size: 0.78rem; padding: 2px 7px; }
+      .liz-drop-body { padding: 2px 4px 8px; }
+      .weight-chart-wrap { padding: 10px 6px 6px; }
+      .lizard-row .btn-small { font-size: 0.88rem; padding: 10px 4px; }
+    }
+    .liz-drop-body .weight-chart-wrap { margin: 8px 2px 4px; }
+    .liz-drop-body .weight-col-item { margin: 8px 2px; overflow: hidden; }
+    .liz-drop-body .item-actions .btn-icon { width: 38px; height: 38px; font-size: 0.9rem; }
     .weight-edit-form { display: flex; flex-direction: column; gap: 8px; padding: 4px 0; }
     .weight-edit-form label {
       font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;
@@ -1568,7 +1616,7 @@
       <div class="nc-label">Next schedule change</div>
       <div class="nc-main" id="ncMain">—</div>
       <div class="nc-detail" id="ncDetail"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1584,7 +1632,7 @@
         <button type="button" class="btn-small" id="logAddBtn">Add log entry</button>
       </div>
       <div class="log-list" id="logList"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1624,7 +1672,7 @@
       </div>
       <div id="weightChart"></div>
       <div class="track-list" id="weightList"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1634,7 +1682,7 @@
       <div class="panel-window-title"><span class="pwt-icon">📊</span><span class="pwt-text">Charts</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div class="kid-chart" id="kidChart"></div>
       <p class="media-hint" style="margin-top:8px;">Warmth, UV hours, and basking hours across the year.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1644,7 +1692,7 @@
       <div class="panel-window-title"><span class="pwt-icon">☀️</span><span class="pwt-text">UV Lights — Time of Day</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="uvTimeChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the lights are on. Drag the dots at each end of a bar to change that month's start and end time. Months that are off are labeled OFF.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1654,7 +1702,7 @@
       <div class="panel-window-title"><span class="pwt-icon">🔥</span><span class="pwt-text">Basking Bulb — Time of Day</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="baskTimeChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the bulb is on. Drag the dots at each end of a bar to change that month's start and end time. Months that are off are labeled OFF.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1664,7 +1712,7 @@
       <div class="panel-window-title"><span class="pwt-icon">🌡️</span><span class="pwt-text">Temperature — By Month</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="tempChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; bar length and color show the target temperature — blue is cooler, red is warmer, the same heat scale used in the Easy Chart. Drag the dot at the end of a bar to change that month's temperature.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1680,7 +1728,7 @@
   <div id="printSheet" aria-hidden="true"></div>
 
   <div class="footer-note">
-    <span class="footer-copyright" id="footerCopyright" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v1.7 · Oct 11, 2026</span>
+    <span class="footer-copyright" id="footerCopyright" title="Click to save a backup">© Thor 2026</span><span class="sync-line offline" id="syncLine"></span><span class="app-version">Version v2.0 · Oct 11, 2026</span>
   </div>
 
   <div class="undo-toast" id="undoToast" role="status" aria-live="polite">
@@ -1733,7 +1781,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" onerror="window.__fbLoadFailed = true;"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js" onerror="window.__fbLoadFailed = true;"></script>
   <script>
-    const APP_VERSION = 'v1.7';
+    const APP_VERSION = 'v2.0';
     const APP_VERSION_DATE = 'Oct 11, 2026';
     const STORAGE_KEY = 'shingleback_wintering_v1';
     const LOG_KEY = 'shingleback_logs_v1';
@@ -1745,6 +1793,8 @@
     // (Shingleback_Backup_20260812.html — Ripper's birth-to-3-week weigh-ins).
     // Merges by id, so this is safe to leave in even after it's already applied.
     (function mergeImportedWeights() {
+      try { if (localStorage.getItem('shingleback_ripper_import_done_v1') === '1') return; } catch (e) { return; }
+      try { localStorage.setItem('shingleback_ripper_import_done_v1', '1'); } catch (e) {}
       var imported = [
         { id: 'w-1786576884540', date: '2026-08-14', name: 'Ripper', weight: '187', note: '3 weeks', ts: 1786576884540 },
         { id: 'w-1786576858392', date: '2026-08-07', name: 'Ripper', weight: '163', note: '2 weeks', ts: 1786576858392 },
@@ -2300,10 +2350,14 @@
       else if (key === LIZARD_KEY) schedulePush('lizards');
     }
 
-    // ---- Cloud sync (Firebase Realtime Database) ----
-    // Shares the same Firebase project as the household task app (the only
-    // one already provisioned) but writes under its own top-level path
-    // ('shingleback/...') so the two apps' data never mix.
+    // ---- Cloud sync v2 (Firebase Realtime Database) ----
+    // Every weigh-in, log note, schedule period and lizard is synced as its own
+    // entry with a "last changed" time. When two devices disagree, the newer
+    // change wins per entry, deletions carry over, and anything entered while a
+    // device was offline uploads as soon as it reconnects — no device can wipe
+    // out another device's entries by uploading a stale copy of the whole list.
+    // Shares the household-tasks Firebase project but writes under its own
+    // 'shingleback/v2/...' path. The old 'shingleback/<kind>' data is merged in once.
     var FIREBASE_CONFIG = {
       apiKey: "AIzaSyDWceP3CnO43wj6xSu_FQ2jQ9N-LVxSKr8",
       authDomain: "household-tasks-cb3ca.firebaseapp.com",
@@ -2314,133 +2368,331 @@
       appId: "1:719926406482:web:28ccdd630bea4531079e8b"
     };
 
+    var SYNC_META_KEY = 'shingleback_sync_meta_v2';
+    var SYNC_ROOT = 'shingleback/v2/';
+    var SYNC_KINDS = ['periods', 'logs', 'weights', 'lizards'];
     var syncRefs = {};
     var firebaseOK = false;
     var applyingRemoteUpdate = false;
-    var receivedFirstRemote = { periods: false, logs: false, weights: false, lizards: false };
+    var suppressPush = false;
     var pushTimers = {};
+    var haveSnapshot = {};
+    var fbConnected = false;
+    var syncReadError = '';
+    var syncLibMissing = false;
+    var lastSyncAt = 0;
 
-    function setSyncStatus(mode) {
-      var el = document.getElementById('syncStatus');
-      if (!el) return;
-      el.className = 'sync-status-btn ' + mode;
-      var label = mode === 'online' ? 'Live' : (mode === 'connecting' ? 'Connecting…' : 'Offline');
-      el.title = 'Cloud sync: ' + label + ' — tap to sync now';
+    function stableStr(v) {
+      if (v === null || typeof v !== 'object') return JSON.stringify(v === undefined ? null : v);
+      if (Array.isArray(v)) return '[' + v.map(stableStr).join(',') + ']';
+      return '{' + Object.keys(v).sort().filter(function(k) { return v[k] !== undefined; })
+        .map(function(k) { return JSON.stringify(k) + ':' + stableStr(v[k]); }).join(',') + '}';
     }
 
-    function pushToFirebase(kind) {
+    function fbKey(id) { return encodeURIComponent(String(id)).replace(/\./g, '%2E'); }
+    function fromFbKey(k) { try { return decodeURIComponent(k); } catch (e) { return k; } }
+
+    function loadSyncMeta() {
+      var m;
+      try { m = JSON.parse(localStorage.getItem(SYNC_META_KEY) || '{}'); } catch (e) { m = {}; }
+      if (!m || typeof m !== 'object') m = {};
+      SYNC_KINDS.forEach(function(k) {
+        if (!m[k] || typeof m[k] !== 'object') m[k] = {};
+        m[k].stamps = m[k].stamps || {};
+        m[k].tombs = m[k].tombs || {};
+        m[k].items = m[k].items || {};
+      });
+      return m;
+    }
+
+    function saveSyncMeta(m) {
+      try { localStorage.setItem(SYNC_META_KEY, JSON.stringify(m)); } catch (e) {}
+    }
+
+    function readLocal(kind) {
+      if (kind === 'periods') return periods;
+      if (kind === 'logs') return loadJSON(LOG_KEY, []);
+      if (kind === 'weights') return loadJSON(WEIGHT_KEY, []);
+      return loadJSON(LIZARD_KEY, []);
+    }
+
+    // Turn a local list into { id: record }. Gives legacy entries an id if missing.
+    function recordsOf(kind, arr, m, result) {
+      var out = {};
+      (Array.isArray(arr) ? arr : []).forEach(function(x, i) {
+        if (kind === 'lizards') {
+          var name = String(x || '').trim();
+          if (!name) return;
+          var id = name.toLowerCase();
+          var prev = m.items[id];
+          out[id] = { name: name, added: (prev && prev.added) || (m.init ? Date.now() + i : i + 1) };
+          return;
+        }
+        if (!x || typeof x !== 'object') return;
+        if (!x.id) {
+          x.id = (kind === 'logs' ? 'log-' : (kind === 'weights' ? 'w-' : 'p-')) + (x.ts || Date.now()) + '-' + i;
+          if (result) result.mutated = true;
+        }
+        var o = JSON.parse(JSON.stringify(x));
+        if (kind === 'periods') o.ord = i;
+        out[x.id] = o;
+      });
+      return out;
+    }
+
+    function writeLocal(kind, recs) {
+      var list = Object.keys(recs).map(function(k) { return recs[k]; });
+      suppressPush = true;
+      try {
+        if (kind === 'periods') {
+          list.sort(function(a, b) { return (a.ord || 0) - (b.ord || 0); });
+          periods = list;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(periods));
+        } else if (kind === 'logs' || kind === 'weights') {
+          list.sort(function(a, b) { return (b.date || '').localeCompare(a.date || '') || ((b.ts || 0) - (a.ts || 0)); });
+          localStorage.setItem(kind === 'logs' ? LOG_KEY : WEIGHT_KEY, JSON.stringify(list));
+        } else {
+          list.sort(function(a, b) { return (a.added || 0) - (b.added || 0); });
+          localStorage.setItem(LIZARD_KEY, JSON.stringify(list.map(function(x) { return x.name; })));
+        }
+      } catch (e) {} finally { suppressPush = false; }
+    }
+
+    function renderKind(kind) {
+      if (kind === 'periods') renderAll();
+      else if (kind === 'logs') { renderLogs(); renderTimeline(); }
+      else renderWeights();
+    }
+
+    // Record what changed on this device since last time. Returns { id: {u, j} } to upload.
+    function stampLocal(kind) {
+      var meta = loadSyncMeta(), m = meta[kind];
+      var res = { mutated: false };
+      var recs = recordsOf(kind, readLocal(kind), m, res);
+      if (res.mutated) writeLocal(kind, recs);
+      var now = Date.now(), changes = {};
+      Object.keys(recs).forEach(function(id) {
+        var o = recs[id], h = stableStr(o), st = m.stamps[id];
+        if (st && st.h === h) return;
+        // First run on this device: date entries by when they were made, so the
+        // shared cloud copy wins over anything this device hasn't touched since.
+        var u = m.init ? now : (o.ts || o.added || 1);
+        if (m.tombs[id] != null) { delete m.tombs[id]; u = now; }
+        m.stamps[id] = { h: h, u: u };
+        m.items[id] = o;
+        changes[id] = { u: u, j: h };
+      });
+      Object.keys(m.stamps).forEach(function(id) {
+        if (recs[id]) return;
+        var u = m.init ? now : (m.stamps[id].u || 1);
+        delete m.stamps[id];
+        delete m.items[id];
+        m.tombs[id] = u;
+        changes[id] = { u: u, j: null };
+      });
+      m.init = true;
+      saveSyncMeta(meta);
+      return changes;
+    }
+
+    function pushChanges(kind, changes) {
       var ref = syncRefs[kind];
       if (!ref) return;
-      var data = kind === 'periods' ? periods : loadJSON(kind === 'logs' ? LOG_KEY : (kind === 'lizards' ? LIZARD_KEY : WEIGHT_KEY), []);
-      ref.set(data).catch(function(err) { console.error('Firebase write failed (' + kind + ')', err); });
+      var upd = {}, any = false;
+      Object.keys(changes).forEach(function(id) { upd[fbKey(id)] = changes[id]; any = true; });
+      if (!any) return;
+      ref.update(upd).then(function() {
+        lastSyncAt = Date.now();
+        refreshSyncStatus();
+      }).catch(function(err) {
+        console.error('Firebase write failed (' + kind + ')', err);
+        syncReadError = (err && (err.code || err.message)) || 'write failed';
+        refreshSyncStatus();
+      });
+    }
+
+    // Merge a cloud copy ({ key: {u, j} }) into this device. Newest change wins per entry.
+    function mergeRemote(kind, remote, pushBack) {
+      stampLocal(kind); // make sure this device's own edits are dated first
+      var meta = loadSyncMeta(), m = meta[kind];
+      var recs = {};
+      Object.keys(m.items).forEach(function(id) { if (m.stamps[id]) recs[id] = m.items[id]; });
+      var rById = {};
+      remote = (remote && typeof remote === 'object') ? remote : {};
+      Object.keys(remote).forEach(function(k) { rById[fromFbKey(k)] = remote[k]; });
+      var ids = {};
+      [m.stamps, m.tombs, rById].forEach(function(obj) { Object.keys(obj).forEach(function(id) { ids[id] = 1; }); });
+      var changedLocal = false, toPush = {};
+      Object.keys(ids).forEach(function(id) {
+        var st = m.stamps[id], tomb = m.tombs[id];
+        var lu = st ? st.u : (tomb != null ? tomb : -1);
+        var r = rById[id];
+        var ru = (r && typeof r.u === 'number') ? r.u : -1;
+        if (ru > lu) {
+          if (r.j == null) {
+            if (st) { delete m.stamps[id]; delete m.items[id]; delete recs[id]; changedLocal = true; }
+            m.tombs[id] = ru;
+          } else {
+            var o;
+            try { o = JSON.parse(r.j); } catch (e) { return; }
+            recs[id] = o;
+            m.items[id] = o;
+            m.stamps[id] = { h: stableStr(o), u: ru };
+            delete m.tombs[id];
+            changedLocal = true;
+          }
+        } else if (lu > ru && pushBack) {
+          toPush[id] = st ? { u: st.u, j: st.h } : { u: tomb, j: null };
+        }
+      });
+      saveSyncMeta(meta);
+      if (changedLocal) {
+        applyingRemoteUpdate = true;
+        try { writeLocal(kind, recs); renderKind(kind); } finally { applyingRemoteUpdate = false; }
+      }
+      if (pushBack) pushChanges(kind, toPush);
+    }
+
+    function legacyToRemote(kind, list) {
+      var fake = { items: {}, stamps: {}, tombs: {}, init: false };
+      var recs = recordsOf(kind, list, fake, null);
+      var out = {};
+      Object.keys(recs).forEach(function(id) {
+        var o = recs[id];
+        out[fbKey(id)] = { u: (o.ts || o.added || 1) + 0.5, j: stableStr(o) };
+      });
+      return out;
     }
 
     function schedulePush(kind) {
-      if (applyingRemoteUpdate || !firebaseOK) return;
+      if (suppressPush || applyingRemoteUpdate) return;
+      pushTimers = pushTimers || {};
       clearTimeout(pushTimers[kind]);
-      pushTimers[kind] = setTimeout(function() { pushToFirebase(kind); }, 300);
+      pushTimers[kind] = setTimeout(function() {
+        pushTimers[kind] = null;
+        pushChanges(kind, stampLocal(kind));
+      }, 300);
     }
 
-    function bindSync(kind, applyRemote) {
-      var ref = syncRefs[kind];
-      ref.on('value', function(snapshot) {
-        var remote = snapshot.val();
-        firebaseOK = true;
-        if (!receivedFirstRemote[kind]) {
-          receivedFirstRemote[kind] = true;
-          if (Array.isArray(remote) && remote.length) {
-            applyingRemoteUpdate = true;
-            applyRemote(remote);
-            applyingRemoteUpdate = false;
-          } else {
-            schedulePush(kind); // nothing in the cloud yet — seed it with what's here
-          }
-          setSyncStatus('online');
-          return;
-        }
-        if (Array.isArray(remote)) {
-          applyingRemoteUpdate = true;
-          applyRemote(remote);
-          applyingRemoteUpdate = false;
-        }
-        setSyncStatus('online');
+    function setSyncStatus(mode, detail) {
+      var el = document.getElementById('syncStatus');
+      if (el) {
+        el.className = 'sync-status-btn ' + mode;
+        var label = mode === 'online' ? 'Live' : (mode === 'connecting' ? 'Connecting…' : 'Offline');
+        el.title = 'Cloud sync: ' + label + (detail ? ' — ' + detail : '') + ' — tap to sync now';
+      }
+      var line = document.getElementById('syncLine');
+      if (line) {
+        var t = lastSyncAt ? new Date(lastSyncAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '';
+        if (mode === 'online') line.textContent = '☁️ Synced' + (t ? ' · last update ' + t : '');
+        else if (mode === 'connecting') line.textContent = '☁️ Connecting to cloud sync…';
+        else line.textContent = '⚠️ Not syncing' + (detail ? ' (' + detail + ')' : '') + ' — your changes are saved on this device and upload when it reconnects';
+        line.className = 'sync-line ' + mode;
+      }
+    }
+
+    function refreshSyncStatus() {
+      if (syncLibMissing) { setSyncStatus('offline', 'no internet when the page opened'); return; }
+      if (syncReadError) { setSyncStatus('offline', 'cloud refused: ' + syncReadError); return; }
+      var gotAll = SYNC_KINDS.every(function(k) { return haveSnapshot[k]; });
+      if (fbConnected && gotAll) { firebaseOK = true; setSyncStatus('online'); return; }
+      firebaseOK = false;
+      setSyncStatus(fbConnected ? 'connecting' : (Object.keys(syncRefs).length ? 'connecting' : 'offline'));
+    }
+
+    function bindLive(kind) {
+      syncRefs[kind].on('value', function(snapshot) {
+        haveSnapshot[kind] = true;
+        syncReadError = '';
+        mergeRemote(kind, snapshot.val() || {}, true);
+        lastSyncAt = Date.now();
+        refreshSyncStatus();
       }, function(err) {
         console.error('Firebase read failed (' + kind + ')', err);
-        firebaseOK = false;
-        setSyncStatus('offline');
+        syncReadError = (err && (err.code || err.message)) || 'read failed';
+        refreshSyncStatus();
       });
     }
 
     function initFirebase() {
+      SYNC_KINDS.forEach(function(k) { stampLocal(k); }); // date any edits made while offline
       if (window.__fbLoadFailed || typeof firebase === 'undefined') {
         console.warn('Firebase SDK unavailable — running in offline/local-only mode.');
-        firebaseOK = false;
-        setSyncStatus('offline');
+        syncLibMissing = true;
+        refreshSyncStatus();
         return;
       }
+      syncLibMissing = false;
       try {
         setSyncStatus('connecting');
         if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-        syncRefs.periods = firebase.database().ref('shingleback/periods');
-        syncRefs.logs = firebase.database().ref('shingleback/logs');
-        syncRefs.weights = firebase.database().ref('shingleback/weights');
-        syncRefs.lizards = firebase.database().ref('shingleback/lizards');
-
-        bindSync('periods', function(remote) {
-          periods = remote;
-          savePeriods();
-          renderAll();
+        var db = firebase.database();
+        db.ref('.info/connected').on('value', function(s) {
+          fbConnected = s.val() === true;
+          refreshSyncStatus();
         });
-        bindSync('logs', function(remote) {
-          saveJSON(LOG_KEY, remote);
-          renderLogs();
-          renderTimeline();
-        });
-        bindSync('weights', function(remote) {
-          saveJSON(WEIGHT_KEY, remote);
-          renderWeights();
-        });
-        bindSync('lizards', function(remote) {
-          saveJSON(LIZARD_KEY, remote);
-          renderLizardSelect();
+        SYNC_KINDS.forEach(function(kind) {
+          if (syncRefs[kind]) return;
+          syncRefs[kind] = db.ref(SYNC_ROOT + kind);
+          var meta = loadSyncMeta();
+          if (meta[kind].migrated) { bindLive(kind); return; }
+          // One-time: fold in the data saved by older versions of the app.
+          db.ref('shingleback/' + kind).once('value').then(function(snap) {
+            var v = snap.val();
+            if (v && typeof v === 'object') {
+              var list = Array.isArray(v) ? v : Object.keys(v).map(function(k) { return v[k]; });
+              mergeRemote(kind, legacyToRemote(kind, list), false);
+            }
+            var mm = loadSyncMeta();
+            mm[kind].migrated = true;
+            saveSyncMeta(mm);
+          }).catch(function(err) {
+            console.warn('Legacy read failed (' + kind + ')', err);
+          }).then(function() { bindLive(kind); });
         });
       } catch (e) {
         console.error('Firebase init failed', e);
-        firebaseOK = false;
-        setSyncStatus('offline');
+        syncReadError = 'could not start';
+        refreshSyncStatus();
       }
+    }
+
+    function syncNow() {
+      SYNC_KINDS.forEach(function(kind) {
+        if (pushTimers[kind]) { clearTimeout(pushTimers[kind]); pushTimers[kind] = null; }
+      });
+      if (!syncRefs.periods) { initFirebase(); return; }
+      try { firebase.database().goOnline(); } catch (e) {}
+      SYNC_KINDS.forEach(function(kind) {
+        pushChanges(kind, stampLocal(kind));
+        syncRefs[kind].once('value').then(function(snapshot) {
+          haveSnapshot[kind] = true;
+          syncReadError = '';
+          mergeRemote(kind, snapshot.val() || {}, true);
+          lastSyncAt = Date.now();
+          refreshSyncStatus();
+        }).catch(function(err) {
+          console.error('Manual sync failed (' + kind + ')', err);
+          syncReadError = (err && (err.code || err.message)) || 'read failed';
+          refreshSyncStatus();
+        });
+      });
     }
 
     (function setupManualSync() {
       var btn = document.getElementById('syncStatus');
-      if (!btn) return;
-      btn.addEventListener('click', function() {
+      if (btn) btn.addEventListener('click', function() {
         btn.classList.remove('spinning');
         void btn.offsetWidth;
         btn.classList.add('spinning');
         setTimeout(function() { btn.classList.remove('spinning'); }, 650);
-
-        Object.keys(pushTimers).forEach(function(kind) {
-          if (pushTimers[kind]) { clearTimeout(pushTimers[kind]); pushTimers[kind] = null; pushToFirebase(kind); }
-        });
-
-        if (!firebaseOK || !syncRefs.periods) {
-          initFirebase();
-          return;
-        }
-        ['periods', 'logs', 'weights', 'lizards'].forEach(function(kind) {
-          syncRefs[kind].once('value').then(function(snapshot) {
-            var remote = snapshot.val();
-            if (!Array.isArray(remote)) return;
-            applyingRemoteUpdate = true;
-            if (kind === 'periods') { periods = remote; savePeriods(); renderAll(); }
-            else if (kind === 'logs') { saveJSON(LOG_KEY, remote); renderLogs(); renderTimeline(); }
-            else if (kind === 'lizards') { saveJSON(LIZARD_KEY, remote); renderLizardSelect(); }
-            else { saveJSON(WEIGHT_KEY, remote); renderWeights(); }
-            applyingRemoteUpdate = false;
-          }).catch(function(err) { console.error('Manual sync failed (' + kind + ')', err); });
-        });
+        syncNow();
       });
+      // Phones pause pages in the background — catch up as soon as the app is shown again.
+      document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') syncNow();
+      });
+      window.addEventListener('online', syncNow);
     })();
 
     // ---- Next change countdown ----
@@ -2650,8 +2902,8 @@
       return (MON[mi] || '') + ' ' + parseInt(parts[2], 10);
     }
 
-    function renderWeightChart(rows) {
-      var box = document.getElementById('weightChart');
+    function renderWeightChart(rows, box) {
+      box = box || document.getElementById('weightChart');
       if (!box) return;
       var valid = (rows || []).filter(function(r) {
         return r && r.date && r.weight !== '' && r.weight !== null && !isNaN(parseFloat(r.weight));
@@ -2690,17 +2942,18 @@
       var axisSpan = axis.end - axis.start || 1;
       var tsSpan = (maxTs - minTs) || 1;
 
-      var W = 320, H = 190;
-      var padL = 38, padR = 14, padT = 14, padB = 26;
+      var W = 320, H = 210;
+      var padL = 40, padR = 20, padT = 24, padB = 30;
       var plotW = W - padL - padR, plotH = H - padT - padB;
 
-      function xFor(ts) { return padL + ((ts - minTs) / tsSpan) * plotW; }
+      var inset = 8;
+      function xFor(ts) { return padL + inset + ((ts - minTs) / tsSpan) * (plotW - inset * 2); }
       function yFor(v) { return padT + (1 - (v - axis.start) / axisSpan) * plotH; }
 
       var gridSvg = axis.ticks.map(function(v) {
         var y = yFor(v);
         return '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="var(--border)" stroke-width="1"/>' +
-          '<text x="' + (padL - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-size="10" fill="var(--text-muted)">' + Math.round(v) + '</text>';
+          '<text x="' + (padL - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-size="12" fill="var(--text-muted)">' + Math.round(v) + '</text>';
       }).join('');
 
       // X-axis: first, last, and (if there's room) one middle date
@@ -2714,7 +2967,7 @@
       var xLabelsSvg = xTsList.map(function(ts) {
         var x = xFor(ts);
         var anchor = x < padL + 20 ? 'start' : (x > W - padR - 20 ? 'end' : 'middle');
-        return '<text x="' + x + '" y="' + (H - 6) + '" text-anchor="' + anchor + '" font-size="10" fill="var(--text-muted)">' + fmtChartDate(new Date(ts).toISOString().slice(0, 10)) + '</text>';
+        return '<text x="' + x + '" y="' + (H - 6) + '" text-anchor="' + anchor + '" font-size="12" fill="var(--text-muted)">' + fmtChartDate(new Date(ts).toISOString().slice(0, 10)) + '</text>';
       }).join('');
 
       var seriesSvg = order.map(function(key, si) {
@@ -2725,20 +2978,23 @@
         }).join(' ');
         var dots = pts.map(function(p) {
           var title = key + ' — ' + fmtChartDate(p.date) + ': ' + p.value + ' g';
-          return '<circle cx="' + xFor(p.ts).toFixed(1) + '" cy="' + yFor(p.value).toFixed(1) + '" r="4" fill="' + color + '" stroke="var(--card-alt)" stroke-width="2"><title>' + title + '</title></circle>';
+          var cx = xFor(p.ts).toFixed(1), cy = yFor(p.value).toFixed(1);
+          return '<g><title>' + title + '</title>' +
+            '<circle cx="' + cx + '" cy="' + cy + '" r="14" fill="transparent"/>' +
+            '<circle cx="' + cx + '" cy="' + cy + '" r="5.5" fill="' + color + '" stroke="var(--card-alt)" stroke-width="2.5"/></g>';
         }).join('');
         var last = pts[pts.length - 1];
         var lastX = xFor(last.ts), lastY = yFor(last.value);
         var labelAnchor = lastX > W - padR - 30 ? 'end' : 'start';
-        var labelX = lastX + (labelAnchor === 'end' ? -8 : 8);
+        var labelX = lastX + (labelAnchor === 'end' ? -10 : 10);
         var endLabelText = (order.length > 1 && key !== 'Weight') ? (key + ' ' + last.value + 'g') : (last.value + 'g');
-        var endLabel = '<text x="' + labelX + '" y="' + (lastY - 8) + '" text-anchor="' + labelAnchor + '" font-size="11" font-weight="800" fill="' + color + '">' + endLabelText + '</text>';
+        var endLabel = '<text x="' + labelX + '" y="' + (lastY - 11) + '" text-anchor="' + labelAnchor + '" font-size="13" font-weight="800" fill="' + color + '">' + endLabelText + '</text>';
         return '<path d="' + path + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' + dots + endLabel;
       }).join('');
 
       var hasNamedSeries = order.some(function(key) { return key !== 'Weight'; });
       var legendHtml = '';
-      if (order.length > 1 || hasNamedSeries) {
+      if (order.length > 1) {
         legendHtml = '<div class="weight-chart-legend">' + order.map(function(key, si) {
           var color = colorForLizard(key === 'Weight' ? '' : key);
           return '<span class="weight-chart-legend-item"><span class="weight-chart-legend-dot" style="background:' + color + '"></span>' + key + '</span>';
@@ -2746,9 +3002,7 @@
       }
 
       var chartTitle = 'Weight over time';
-      if (order.length === 1 && hasNamedSeries) {
-        chartTitle = order[0] + ' — weight over time';
-      }
+
 
       box.innerHTML =
         '<div class="weight-chart-wrap">' +
@@ -2762,6 +3016,7 @@
 
     // ---- Lizards (names used to group weights into chart lines) ----
     var selectedLizard = null;
+    var openLizards = {};
 
     function getLizardNames() {
       var saved = loadJSON(LIZARD_KEY, []);
@@ -2928,7 +3183,7 @@
         saveJSON(LIZARD_KEY, saved);
       }
       selectedLizard = existing || name;
-      renderLizardSelect();
+      renderWeights();
       showAddLizard(false);
     }
 
@@ -2939,13 +3194,10 @@
       if (dateInp && !dateInp.value) dateInp.value = todayKey();
       const rows = loadJSON(WEIGHT_KEY, []);
       renderLizardSelect();
-      renderWeightChart(rows);
-      if (!rows.length) {
-        list.innerHTML = '<div class="track-item" style="color:var(--text-muted)">No weights logged</div>';
-        return;
-      }
+      var combined = document.getElementById('weightChart');
+      if (combined) combined.innerHTML = '';
       rows.forEach(function(r, idx) { if (!r.id) r.id = 'w-' + (r.ts || idx) + '-' + idx; });
-      // One column per lizard, side by side, in that lizard's chart color
+      // One dropdown per lizard, each with its own chart and weigh-ins
       var colOrder = getLizardNames().slice();
       var cols = {};
       colOrder.forEach(function(n) { cols[n.toLowerCase()] = []; });
@@ -2958,26 +3210,48 @@
         cols[k].push(r);
       });
       if (hasUnnamed) colOrder.push('');
-      list.innerHTML = '<div class="weight-cols" style="--cols:' + colOrder.length + '">' + colOrder.map(function(n) {
+      if (!colOrder.length) {
+        list.innerHTML = '<div class="track-item" style="color:var(--text-muted)">No weights logged — tap ➕ Add to add your first lizard</div>';
+        return;
+      }
+      // remember which dropdowns are open across re-renders
+      list.querySelectorAll('details.liz-drop').forEach(function(d) {
+        openLizards[d.getAttribute('data-liz')] = d.open;
+      });
+      list.innerHTML = colOrder.map(function(n) {
+        var k = n.toLowerCase();
         var color = colorForLizard(n);
-        var items = cols[n.toLowerCase()] || [];
+        var items = cols[k] || [];
+        var latest = items[0];
+        var isOpen = openLizards.hasOwnProperty(k) ? openLizards[k] : false;
         var body = items.length ? items.slice(0, 30).map(function(r) {
           var editable = withinEditWindow(r);
           return '<div class="track-item weight-col-item" data-wid="' + r.id + '" style="border-left-color:' + color + '">' +
+            (editable ? '<span class="item-actions">' +
+              '<button type="button" class="btn btn-icon btn-edit" data-w-edit="' + r.id + '" title="Edit">✏️</button>' +
+              '<button type="button" class="btn btn-icon btn-delete" data-w-del="' + r.id + '" title="Delete">✕</button>' +
+            '</span>' : '') +
             '<div class="track-date">' + escHtml(r.date || '') + '</div>' +
             '<div class="weight-col-val">' + escHtml(r.weight || '') + ' g</div>' +
             (r.note ? '<div class="weight-col-note">' + escHtml(r.note) + '</div>' : '') +
-            (editable ? '<div class="weight-col-actions">' +
-              '<button type="button" class="btn btn-icon btn-edit" data-w-edit="' + r.id + '" title="Edit">✏️</button>' +
-              '<button type="button" class="btn btn-icon btn-delete" data-w-del="' + r.id + '" title="Delete">✕</button>' +
-            '</div>' : '') +
             '</div>';
         }).join('') : '<div class="weight-col-empty">No weigh-ins yet</div>';
-        return '<div class="weight-col">' +
-          '<div class="weight-col-head" style="background:' + color + '">' + escHtml(n || '(no name)') +
-            '<span class="weight-col-count">' + items.length + '</span></div>' +
-          body + '</div>';
-      }).join('') + '</div>';
+        return '<details class="liz-drop" data-liz="' + escHtml(k) + '" style="--liz:' + color + '"' + (isOpen ? ' open' : '') + '>' +
+          '<summary class="liz-drop-head">' +
+            '<span class="liz-drop-name">' + escHtml(n || '(no name)') + '</span>' +
+            '<span class="liz-drop-meta">' + (latest ? escHtml(latest.weight) + ' g · ' : '') + items.length + ' weigh-in' + (items.length === 1 ? '' : 's') + '</span>' +
+          '</summary>' +
+          '<div class="liz-drop-body">' +
+            (items.length ? '<div class="liz-chart" data-liz-chart="' + escHtml(k) + '"></div>' : '') +
+            body +
+          '</div>' +
+        '</details>';
+      }).join('');
+      colOrder.forEach(function(n) {
+        var k = n.toLowerCase();
+        var box = list.querySelector('[data-liz-chart="' + k.replace(/"/g, '\\"') + '"]');
+        if (box) renderWeightChart(cols[k] || [], box);
+      });
       // persist any generated ids
       saveJSON(WEIGHT_KEY, rows);
     }
@@ -2990,6 +3264,7 @@
       const note = (document.getElementById('weightNote').value || '').trim();
       if (!weight) { alert('Enter a weight'); return; }
       if (!name && getLizardNames().length) { alert('Choose a lizard'); return; }
+      openLizards[name.toLowerCase()] = true;
       var prev = name ? lastWeightFor(name) : null;
       var wNum = parseFloat(weight);
       if (prev && !isNaN(wNum)) {
