@@ -1553,6 +1553,9 @@
     .liz-drop-body .weight-chart-wrap { margin: 8px 2px 4px; }
     .liz-drop-body .weight-col-item { margin: 8px 2px; overflow: hidden; }
     .liz-drop-body .item-actions .btn-icon { width: 38px; height: 38px; font-size: 0.9rem; }
+    .log-note-text, .cal-log-item { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .log-edit-form { display: flex; flex-direction: column; gap: 8px; padding: 4px 0; }
+    .log-edit-form textarea { min-height: 90px; resize: vertical; }
     .weight-edit-form { display: flex; flex-direction: column; gap: 8px; padding: 4px 0; }
     .weight-edit-form label {
       font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;
@@ -1616,7 +1619,7 @@
       <div class="nc-label">Next schedule change</div>
       <div class="nc-main" id="ncMain">—</div>
       <div class="nc-detail" id="ncDetail"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.2 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1628,11 +1631,11 @@
         <label style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);font-weight:600;">Date</label>
         <input type="date" id="logDate">
         <label style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);font-weight:600;">Note</label>
-        <input type="text" id="logNote" placeholder="Note (ate well, shed, basking…)">
+        <textarea id="logNote" rows="3" placeholder="Note (ate well, shed, basking…) — press Enter for a new line"></textarea>
         <button type="button" class="btn-small" id="logAddBtn">Add log entry</button>
       </div>
       <div class="log-list" id="logList"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.2 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1672,7 +1675,7 @@
       </div>
       <div id="weightChart"></div>
       <div class="track-list" id="weightList"></div>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.2 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1682,7 +1685,7 @@
       <div class="panel-window-title"><span class="pwt-icon">📊</span><span class="pwt-text">Charts</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div class="kid-chart" id="kidChart"></div>
       <p class="media-hint" style="margin-top:8px;">Warmth, UV hours, and basking hours across the year.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.2 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1692,7 +1695,7 @@
       <div class="panel-window-title"><span class="pwt-icon">☀️</span><span class="pwt-text">UV Lights — Time of Day</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="uvTimeChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the lights are on. Drag the dots at each end of a bar to change that month's start and end time. Months that are off are labeled OFF.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.2 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1702,7 +1705,7 @@
       <div class="panel-window-title"><span class="pwt-icon">🔥</span><span class="pwt-text">Basking Bulb — Time of Day</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="baskTimeChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; the bar marks when the bulb is on. Drag the dots at each end of a bar to change that month's start and end time. Months that are off are labeled OFF.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.2 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1712,7 +1715,7 @@
       <div class="panel-window-title"><span class="pwt-icon">🌡️</span><span class="pwt-text">Temperature — By Month</span><button type="button" class="pwt-close" data-close-panel aria-label="Close">✕</button></div>
       <div id="tempChart"></div>
       <p class="media-hint" style="margin-top:8px;">Each row is a month; bar length and color show the target temperature — blue is cooler, red is warmer, the same heat scale used in the Easy Chart. Drag the dot at the end of a bar to change that month's temperature.</p>
-      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.0 · Oct 11, 2026</span></div>
+      <div class="footer-note"><span class="footer-copyright" data-open-backup="true" title="Click to save a backup">© Thor 2026</span><span class="app-version">Version v2.2 · Oct 11, 2026</span></div>
     </div>
   </details>
 
@@ -1728,7 +1731,7 @@
   <div id="printSheet" aria-hidden="true"></div>
 
   <div class="footer-note">
-    <span class="footer-copyright" id="footerCopyright" title="Click to save a backup">© Thor 2026</span><span class="sync-line offline" id="syncLine"></span><span class="app-version">Version v2.0 · Oct 11, 2026</span>
+    <span class="footer-copyright" id="footerCopyright" title="Click to save a backup">© Thor 2026</span><span class="sync-line offline" id="syncLine"></span><span class="app-version">Version v2.2 · Oct 11, 2026</span>
   </div>
 
   <div class="undo-toast" id="undoToast" role="status" aria-live="polite">
@@ -1781,7 +1784,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" onerror="window.__fbLoadFailed = true;"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js" onerror="window.__fbLoadFailed = true;"></script>
   <script>
-    const APP_VERSION = 'v2.0';
+    const APP_VERSION = 'v2.2';
     const APP_VERSION_DATE = 'Oct 11, 2026';
     const STORAGE_KEY = 'shingleback_wintering_v1';
     const LOG_KEY = 'shingleback_logs_v1';
@@ -2781,7 +2784,8 @@
               '<button type="button" class="btn btn-icon btn-edit" data-log-edit="' + lid + '" data-log-index="' + idx + '" title="Edit">✏️</button>' +
               '<button type="button" class="btn btn-icon btn-delete" data-log-del="' + lid + '" data-log-index="' + idx + '" title="Delete">✕</button>' +
             '</span>' : '') +
-            '<div class="log-date">' + (L.date || '') + '</div>' + (L.note || '') +
+            '<div class="log-date">' + escHtml(L.date || '') + '</div>' +
+            '<div class="log-note-text">' + escHtml(L.note || '') + '</div>' +
             '</div>';
         }).join('');
         return '<details class="month-drop log-month-drop"' + (gi === 0 ? ' open' : '') + '>' +
@@ -2794,9 +2798,9 @@
     function addLog() {
       const inp = document.getElementById('logNote');
       const dateInp = document.getElementById('logDate');
-      const note = (inp && inp.value || '').trim();
+      const note = (inp && inp.value || '').replace(/\s+$/, '').replace(/^\s*\n/, '');
       const date = (dateInp && dateInp.value) ? dateInp.value : todayKey();
-      if (!note) { alert('Enter a note'); return; }
+      if (!note.trim()) { alert('Enter a note'); return; }
       const logs = loadJSON(LOG_KEY, []);
       logs.unshift({
         id: 'log-' + Date.now(),
@@ -2842,12 +2846,31 @@
       var logs = loadJSON(LOG_KEY, []);
       var L = logs.find(function(x) { return x.id === id; });
       if (!L) return;
-      var date = prompt('Date (YYYY-MM-DD)', L.date || '');
-      if (date === null) return;
-      var note = prompt('Note', L.note || '');
-      if (note === null) return;
-      L.date = date.trim();
-      L.note = note.trim();
+      var item = document.querySelector('#logList [data-log-id="' + id + '"]');
+      if (!item) return;
+      item.innerHTML =
+        '<div class="log-edit-form">' +
+          '<input type="date" class="le-date" value="' + escHtml(L.date || '') + '">' +
+          '<textarea class="le-note" rows="4">' + escHtml(L.note || '') + '</textarea>' +
+          '<div class="row-btns">' +
+            '<button type="button" class="btn-small" data-log-save="' + id + '">Save</button>' +
+            '<button type="button" class="btn-small secondary" data-log-cancel="' + id + '">Cancel</button>' +
+          '</div>' +
+        '</div>';
+      var ta = item.querySelector('.le-note');
+      if (ta) { try { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); } catch (e) {} }
+    }
+
+    function saveLogEdit(id) {
+      var item = document.querySelector('#logList [data-log-id="' + id + '"]');
+      if (!item) return;
+      var logs = loadJSON(LOG_KEY, []);
+      var L = logs.find(function(x) { return x.id === id; });
+      if (!L) return;
+      var note = item.querySelector('.le-note').value.replace(/\s+$/, '').replace(/^\s*\n/, '');
+      if (!note.trim()) { alert('Enter a note'); return; }
+      L.date = item.querySelector('.le-date').value || L.date;
+      L.note = note;
       logs.sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
       saveJSON(LOG_KEY, logs);
       renderLogs();
@@ -4120,6 +4143,10 @@
     document.getElementById('logList').addEventListener('click', function(e) {
       var ed = e.target.closest('[data-log-edit]');
       var del = e.target.closest('[data-log-del]');
+      var sv = e.target.closest('[data-log-save]');
+      var cn = e.target.closest('[data-log-cancel]');
+      if (sv) { e.preventDefault(); saveLogEdit(sv.getAttribute('data-log-save')); return; }
+      if (cn) { e.preventDefault(); renderLogs(); return; }
       if (ed) { e.preventDefault(); editLog(ed.getAttribute('data-log-edit')); }
       if (del) { e.preventDefault(); deleteLog(del.getAttribute('data-log-del')); }
     });
